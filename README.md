@@ -1,5 +1,8 @@
-# Self-Managing AI Memory
-### Learning Continuously with Minimal Storage and Reduced Catastrophic Forgetting
+self-managing-ai-memory/
+│
+├── README.md
+├── Self_Managing_AI_Memory.ipynb
+└── requirements.txt
 
 ## 1. Project Overview
 
