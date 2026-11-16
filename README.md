@@ -1,59 +1,119 @@
 # Self-Managing AI Memory
 ### Learning Continuously with Minimal Storage and Reduced Catastrophic Forgetting
 
-## 📌 Project Overview
+## 1. Project Overview
 
-This project explores **Continual Learning** in Deep Learning, focusing on one major challenge called **Catastrophic Forgetting**.
+This project demonstrates **Continual Learning** using Deep Learning and explores the problem of Catastrophic Forgetting.
 
-Catastrophic forgetting happens when a neural network learns new tasks but loses previously learned knowledge.
+Catastrophic Forgetting occurs when a neural network learns new tasks but loses previously acquired knowledge.
 
-This project compares two approaches:
+This project implements and compares two approaches:
 
-1. **Without Memory:** The model learns tasks sequentially without storing previous training samples.
-2. **With Memory:** The model maintains a limited memory buffer of selected samples and reuses them during subsequent learning.
+- **Without Memory:** The model learns tasks sequentially without retaining previous training samples.
+- **With Memory:** The model uses a limited memory buffer to store and replay selected samples from previous tasks.
 
-The objective is to reduce forgetting while maintaining reasonable accuracy with limited storage.
+The main objective is to reduce catastrophic forgetting while maintaining accuracy with limited memory storage.
 
-## 🎯 Objectives
+## 2. Objectives
 
-- Understand catastrophic forgetting in continual learning.
-- Compare learning with and without a memory buffer.
-- Reduce the loss of previously learned knowledge.
-- Maintain accuracy across sequential tasks.
-- Minimize memory storage requirements.
+- Understand catastrophic forgetting in neural networks.
+- Implement sequential learning across multiple tasks.
+- Compare learning with and without memory.
+- Implement a class-wise experience replay memory.
+- Evaluate accuracy and forgetting.
+- Maintain a limited memory capacity.
 
-## ⚙️ Methodology
+## 3. Dataset
 
-The experiment follows a sequential learning approach involving five tasks.
+**MNIST Handwritten Digit Dataset**
 
-**Approach 1: Without Memory**
-- Train the model on Task 1.
-- Move to subsequent tasks sequentially.
-- Do not retain previous task samples.
-- Evaluate how much previously learned knowledge is forgotten.
+- Training images: 60,000
+- Testing images: 10,000
+- Image dimensions: 28 × 28 pixels
+- Classes: Digits 0–9
+- Image type: Grayscale
 
-**Approach 2: With Memory**
-- Train the model on sequential tasks.
-- Store selected samples in a limited memory buffer.
-- Replay stored samples during subsequent learning.
-- Evaluate accuracy and forgetting across tasks.
+### Task Division
 
-## 📊 Experimental Results
+| Task | Digit Classes |
+|---|---|
+| Task 1 | 0, 1 |
+| Task 2 | 2, 3 |
+| Task 3 | 4, 5 |
+| Task 4 | 6, 7 |
+| Task 5 | 8, 9 |
 
-### Average Accuracy
+The model learns these five tasks sequentially.
 
-| Metric | Without Memory | With Memory |
-|---|---:|---:|
-| Final Average Accuracy | 19.77% | 68.23% |
+## 4. Model Architecture
 
-**Accuracy Improvement: 48.46 percentage points**
+This project uses an **Artificial Neural Network (ANN)** implemented using PyTorch.
+
+| Layer | Configuration |
+|---|---|
+| Input | 784 features |
+| Hidden Layer 1 | 128 neurons + ReLU |
+| Hidden Layer 2 | 64 neurons + ReLU |
+| Output Layer | 10 neurons |
+
+The 28 × 28 images are flattened into 784 input features.
+
+### Training Configuration
+
+- Optimizer: Adam
+- Learning Rate: 0.001
+- Loss Function: Cross Entropy Loss
+- Epochs: 3 per task
+- Batch Size: 64
+
+## 5. Methodology
+
+### Approach 1: Without Memory
+
+1. Initialize an ANN model.
+2. Train on Task 1.
+3. Sequentially train on Tasks 2–5.
+4. Do not retain previous task samples.
+5. Evaluate performance on previously learned tasks.
+
+### Approach 2: With Memory
+
+1. Initialize another ANN model.
+2. Train on the first task.
+3. Store selected training samples in a memory buffer.
+4. Combine stored samples with new task data.
+5. Train the model using both old and new samples.
+6. Update the memory buffer after each task.
+7. Evaluate performance across all learned tasks.
+
+### Memory Management
+
+The implementation uses a class-wise memory buffer.
+
+- Maximum samples per digit class: 50
+- Total digit classes: 10
+- Maximum memory capacity: 500 samples
+- Selection method: Random sampling
+
+This approach is based on **Experience Replay**.
+
+## 6. Experimental Results
+
+### Final Average Accuracy
+
+| Approach | Accuracy |
+|---|---:|
+| Without Memory | 19.72% |
+| With Memory | 71.77% |
+
+**Accuracy Improvement: 52.05 percentage points**
 
 ### Average Forgetting
 
-| Approach | Average Forgetting |
+| Approach | Forgetting |
 |---|---:|
-| Without Memory | 99.47 pp |
-| With Memory | 38.96 pp |
+| Without Memory | 99.40 percentage points |
+| With Memory | 34.37 percentage points |
 
 ### Memory Usage
 
@@ -63,17 +123,24 @@ The experiment follows a sequential learning approach involving five tasks.
 | Maximum Capacity | 500 |
 | Approximate Image Storage | 1.5 MB |
 
-## 🛠️ Technologies Used
+## 7. Key Findings
+
+- Sequential learning without memory resulted in severe forgetting.
+- Experience Replay helped preserve previously learned knowledge.
+- The memory-based model achieved higher average accuracy.
+- A limited memory buffer reduced forgetting compared with the baseline approach.
+
+## 8. Technologies Used
 
 - Python
-- Deep Learning
+- PyTorch
+- Torchvision
+- NumPy
+- Matplotlib
 - Google Colab
-- Jupyter Notebook
-- Neural Networks
-- Continual Learning
-- Memory Buffer / Experience Replay
+- MNIST Dataset
 
-## 📁 Project Structure
+## 9. Project Structure
 
 ```text
 self-managing-ai-memory/
@@ -82,34 +149,36 @@ self-managing-ai-memory/
 └── Self_Managing_AI_Memory.ipynb
 ```
 
-## 🚀 How to Run
+## 10. How to Run
 
-1. Open the project notebook.
-2. Click **Open in Colab** or download the notebook.
+1. Open the Jupyter Notebook.
+2. Open it in Google Colab.
 3. Run the notebook cells sequentially.
-4. Observe the comparison between the two approaches.
-5. Review the final accuracy, forgetting and memory usage results.
+4. Observe the accuracy comparison.
+5. Review the forgetting and memory usage results.
 
-## 💡 Key Findings
+## 11. Limitations
 
-The experiment demonstrates that retaining and replaying selected previous samples can help reduce catastrophic forgetting in sequential learning.
+- The experiment uses the MNIST dataset.
+- The memory buffer uses random sample selection.
+- The model is evaluated on five sequential tasks.
+- Results may vary between executions because random seeds are not fixed.
+- The two models are independently initialized.
 
-Compared with learning without memory, the memory-based approach achieved higher average accuracy and lower average forgetting while using a limited memory buffer.
+## 12. Future Scope
 
-## 🔮 Future Scope
-
-- Develop more efficient memory selection strategies.
-- Reduce memory storage requirements further.
-- Explore advanced continual learning algorithms.
-- Evaluate performance on larger datasets and more tasks.
+- Explore intelligent memory selection techniques.
 - Investigate adaptive memory management.
+- Reduce storage requirements further.
+- Experiment with larger datasets.
+- Explore advanced continual learning algorithms.
 
-## 👨‍💻 Author
+## 13. Author
 
 **V Amrut Spandan**
 
-GitHub: [AmrutSpandan06](https://github.com/AmrutSpandan06)
+GitHub: https://github.com/AmrutSpandan06
 
-## 📌 Project Status
+---
 
-Academic Deep Learning implementation and experimental comparison.
+**Project Type:** Deep Learning | Continual Learning | Academic Implementation
